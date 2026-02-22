@@ -1,0 +1,168 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ============================================
+   THEME TOKENS — Brand Design System
+   ============================================ */
+@theme inline {
+  /* Brand Primaries */
+  --color-brand-jet: #373534;
+  --color-brand-linen: #f7f1e9;
+  --color-brand-hot-embers: #F25431;
+  --color-brand-mist: #efefed;
+
+  /* Jet scale */
+  --color-jet-50: #dfdedd;
+  --color-jet-100: #c7c5c4;
+  --color-jet-200: #afadac;
+  --color-jet-300: #979594;
+  --color-jet-400: #7f7d7b;
+  --color-jet-500: #676563;
+  --color-jet-600: #4f4d4b;
+  --color-jet-700: #373534;
+  --color-jet-800: #252423;
+  --color-jet-900: #1a1918;
+  --color-jet-950: #121111;
+
+  /* Hot Embers scale */
+  --color-embers-50: #fef0e5;
+  --color-embers-100: #fce0cb;
+  --color-embers-200: #fac4ac;
+  --color-embers-300: #f8a88d;
+  --color-embers-400: #f68c6e;
+  --color-embers-500: #f4704f;
+  --color-embers-600: #F25431;
+  --color-embers-700: #c73e24;
+  --color-embers-800: #a12918;
+  --color-embers-900: #7a1a0e;
+
+  /* Linen scale */
+  --color-linen-50: #fdfcfa;
+  --color-linen-100: #fcfaf7;
+  --color-linen-200: #fbf8f4;
+  --color-linen-300: #faf6f1;
+  --color-linen-400: #f9f4ed;
+  --color-linen-500: #f7f1e9;
+  --color-linen-600: #efe7dc;
+  --color-linen-700: #e6ddd0;
+  --color-linen-800: #ddd3c4;
+  --color-linen-900: #d4c9b8;
+
+  /* Editorial type scale */
+  --font-size-8xl: 6rem;
+  --font-size-9xl: 7rem;
+
+  --font-display: var(--font-poppins), system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  --font-body: var(--font-dm-sans), system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  --font-accent: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-wrap: balance;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+::selection {
+  background: rgba(242, 84, 49, 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.font-display { font-family: var(--font-display); }
+.font-body { font-family: var(--font-body); }
+.font-accent { font-family: var(--font-accent); }
+
+/* ============================================
+   GLASSMORPHISM SURFACES
+   ============================================ */
+
+.surface-glass {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 40px rgba(55, 53, 52, 0.06);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+}
+
+.surface-glass-dark {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+}
+
+.glass-glow-line {
+  position: relative;
+}
+
+.glass-glow-line::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8), transparent);
+  pointer-events: none;
+}
+
+/* ============================================
+   GRAIN TEXTURE OVERLAY
+   ============================================ */
+
+.grain-overlay {
+  position: relative;
+}
+
+.grain-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================
+   ANIMATION KEYFRAMES
+   ============================================ */
+
+@keyframes scroll-cue {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(6px); opacity: 0.7; }
+}
+.animate-scroll-cue {
+  animation: scroll-cue 2s ease-in-out infinite;
+}
+
+@keyframes ambient-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-20px, 15px) scale(1.05); }
+  66% { transform: translate(20px, -10px) scale(0.95); }
+}
+
+@keyframes ring-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.03); opacity: 0.6; }
+}

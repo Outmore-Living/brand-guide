@@ -1,0 +1,46 @@
+import type { Metadata } from "next";
+import { Poppins, DM_Sans, Cormorant_Garamond } from "next/font/google";
+import "./globals.css";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-poppins",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-dm-sans",
+  display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: "Outmore Living — Brand Design System",
+  description:
+    "Outmore Living brand design language. Glassmorphism, ambient depth, editorial typography, and the Warmth Gradient light-to-dark flow.",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html
+      lang="en"
+      className={`${poppins.variable} ${dmSans.variable} ${cormorant.variable}`}
+    >
+      <body className="antialiased">{children}</body>
+    </html>
+  );
+}
