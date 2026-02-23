@@ -372,7 +372,7 @@ export default function BrandDesignPage() {
 
           <Reveal delay={0.1}>
             <h2 className="mt-6 font-accent text-5xl font-light italic leading-[1.1] tracking-[-0.01em] text-[#373534] sm:text-6xl md:text-7xl">
-              Cormorant Garamond
+              Noto Serif
             </h2>
             <p className="mt-2 font-accent text-2xl font-light text-[#373534]/30 sm:text-3xl">
               Editorial accent &mdash; weight 300

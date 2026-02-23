@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins, DM_Sans, Cormorant_Garamond } from "next/font/google";
+import { Poppins, DM_Sans, Noto_Serif } from "next/font/google";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -16,11 +16,11 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
-const cormorant = Cormorant_Garamond({
+const notoSerif = Noto_Serif({
   subsets: ["latin"],
   weight: ["300", "400"],
   style: ["normal", "italic"],
-  variable: "--font-cormorant",
+  variable: "--font-noto-serif",
   display: "swap",
 });
 
@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${poppins.variable} ${dmSans.variable} ${cormorant.variable}`}
+      className={`${poppins.variable} ${dmSans.variable} ${notoSerif.variable}`}
     >
       <body className="antialiased">{children}</body>
     </html>
