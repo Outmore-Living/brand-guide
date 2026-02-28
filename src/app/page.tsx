@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
@@ -185,13 +185,53 @@ function Swatch({
   );
 }
 
+/* ---------- Theme Toggle Icons ---------- */
+function SunIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    >
+      <circle cx="12" cy="12" r="5" />
+      <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+    </svg>
+  );
+}
+
+function MoonIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    >
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  );
+}
+
 /* ================================================================
    MAIN PAGE
    ================================================================ */
 export default function BrandDesignPage() {
   const heroRef = useRef<HTMLDivElement>(null);
-  const transitionRef = useRef<HTMLDivElement>(null);
   const [scrollY, setScrollY] = useState(0);
+  const [isDark, setIsDark] = useState(false);
+
+  const toggleTheme = useCallback(() => {
+    setIsDark((prev) => {
+      const next = !prev;
+      document.documentElement.classList.toggle("dark", next);
+      return next;
+    });
+  }, []);
 
   /* Parallax for hero */
   useEffect(() => {
@@ -242,6 +282,19 @@ export default function BrandDesignPage() {
 
   return (
     <div className="relative overflow-x-hidden">
+      {/* Theme Toggle */}
+      <button
+        onClick={toggleTheme}
+        className="theme-toggle"
+        aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      >
+        {isDark ? (
+          <SunIcon className="text-white/70" />
+        ) : (
+          <MoonIcon className="text-[#373534]/60" />
+        )}
+      </button>
+
       {/* ============================================================
           SECTION 1: HERO — Light Theme, Warm Linen
           Full-viewport. Massive editorial type. Ambient orbs.
@@ -249,7 +302,7 @@ export default function BrandDesignPage() {
       <section
         ref={heroRef}
         className="relative flex min-h-dvh items-center justify-center overflow-hidden"
-        style={{ backgroundColor: "#fcf9f5" }}
+        style={{ backgroundColor: "var(--surface-primary)" }}
       >
         {/* Ambient background orbs */}
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
@@ -293,14 +346,16 @@ export default function BrandDesignPage() {
         >
           <p
             data-hero-label
-            className="font-body text-xs font-medium uppercase tracking-[0.3em] text-[#373534]/40"
+            className="font-body text-xs font-medium uppercase tracking-[0.3em]"
+            style={{ color: "var(--text-muted)" }}
           >
             Outmore Living &mdash; Design Language
           </p>
 
           <h1
             data-hero-headline
-            className="mt-6 font-accent text-6xl font-light leading-[1.05] tracking-[-0.02em] text-[#373534] sm:text-7xl md:text-8xl lg:text-[7rem]"
+            className="mt-6 font-accent text-6xl font-light leading-[1.05] tracking-[-0.02em] sm:text-7xl md:text-8xl lg:text-[7rem]"
+            style={{ color: "var(--text-primary)" }}
           >
             Warmth,
             <br />
@@ -309,7 +364,8 @@ export default function BrandDesignPage() {
 
           <p
             data-hero-sub
-            className="mx-auto mt-8 max-w-md font-body text-base leading-relaxed text-[#373534]/50 sm:text-lg"
+            className="mx-auto mt-8 max-w-md font-body text-base leading-relaxed sm:text-lg"
+            style={{ color: "var(--text-tertiary)" }}
           >
             A design system built for life beyond four walls. Refined minimalism
             meets the warmth of outdoor living.
@@ -317,14 +373,21 @@ export default function BrandDesignPage() {
 
           <div
             data-hero-line
-            className="mx-auto my-10 h-px w-16 origin-left bg-[#373534]/15"
+            className="mx-auto my-10 h-px w-16 origin-left"
+            style={{ backgroundColor: "var(--border-default)" }}
           />
 
           <div data-hero-cta className="flex items-center justify-center gap-4">
-            <button className="font-display rounded-full bg-[#373534] px-7 py-3.5 text-sm font-normal tracking-wide text-[#f7f1e9] transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.98]">
+            <button className="font-display rounded-full bg-[#373534] px-7 py-3.5 text-sm font-normal tracking-wide text-[#f7f1e9] transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.98] dark:bg-white/90 dark:text-[#1a1918]">
               Explore Collection
             </button>
-            <button className="font-display rounded-full border border-[#373534]/15 px-7 py-3.5 text-sm font-normal tracking-wide text-[#373534]/70 transition-all duration-150 hover:border-[#373534]/30 hover:-translate-y-0.5 active:scale-[0.98]">
+            <button
+              className="font-display rounded-full border px-7 py-3.5 text-sm font-normal tracking-wide transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
+              style={{
+                borderColor: "var(--border-default)",
+                color: "var(--text-secondary)",
+              }}
+            >
               Our Story
             </button>
           </div>
@@ -337,9 +400,10 @@ export default function BrandDesignPage() {
             height="24"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="rgba(55,53,52,0.25)"
+            stroke="currentColor"
             strokeWidth="1.5"
             strokeLinecap="round"
+            style={{ color: "var(--text-faint)" }}
           >
             <path d="M7 10l5 5 5-5" />
           </svg>
@@ -347,11 +411,11 @@ export default function BrandDesignPage() {
       </section>
 
       {/* ============================================================
-          SECTION 2: TYPOGRAPHY SHOWCASE — Light Theme
+          SECTION 2: TYPOGRAPHY SHOWCASE — Sabon + Sabon Italic
           ============================================================ */}
       <section
         className="relative overflow-hidden py-32 sm:py-40"
-        style={{ backgroundColor: "#fcf9f5" }}
+        style={{ backgroundColor: "var(--surface-primary)" }}
       >
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
           <AmbientOrb
@@ -365,68 +429,116 @@ export default function BrandDesignPage() {
 
         <div className="relative z-10 mx-auto max-w-6xl px-6">
           <Reveal>
-            <p className="font-body text-xs font-medium uppercase tracking-[0.3em] text-[#373534]/30">
+            <p
+              className="font-body text-xs font-medium uppercase tracking-[0.3em]"
+              style={{ color: "var(--text-faint)" }}
+            >
               Typography
             </p>
           </Reveal>
 
+          {/* Sabon showcase */}
           <Reveal delay={0.1}>
-            <h2 className="mt-6 font-accent text-5xl font-light italic leading-[1.1] tracking-[-0.01em] text-[#373534] sm:text-6xl md:text-7xl">
-              Noto Serif
+            <h2
+              className="mt-6 font-accent text-5xl font-normal leading-[1.1] tracking-[-0.01em] sm:text-6xl md:text-7xl"
+              style={{ color: "var(--text-primary)" }}
+            >
+              Sabon
             </h2>
-            <p className="mt-2 font-accent text-2xl font-light text-[#373534]/30 sm:text-3xl">
-              Editorial accent &mdash; weight 300
+            <p
+              className="mt-2 font-accent text-2xl font-normal sm:text-3xl"
+              style={{ color: "var(--text-faint)" }}
+            >
+              Editorial accent &mdash; Roman, weight 400
             </p>
           </Reveal>
 
-          <Reveal delay={0.15}>
+          {/* Sabon Italic showcase */}
+          <Reveal delay={0.12}>
+            <div className="mt-10">
+              <h2
+                className="font-accent text-5xl font-normal italic leading-[1.1] tracking-[-0.01em] sm:text-6xl md:text-7xl"
+                style={{ color: "var(--text-primary)" }}
+              >
+                Sabon Italic
+              </h2>
+              <p
+                className="mt-2 font-accent text-2xl font-normal italic sm:text-3xl"
+                style={{ color: "var(--text-faint)" }}
+              >
+                For emphasis, pull quotes, decorative moments
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Poppins */}
+          <Reveal delay={0.18}>
             <div className="mt-16">
-              <h2 className="font-display text-4xl font-normal leading-[1.15] tracking-[-0.03em] text-[#373534] sm:text-5xl md:text-6xl">
+              <h2
+                className="font-display text-4xl font-normal leading-[1.15] tracking-[-0.03em] sm:text-5xl md:text-6xl"
+                style={{ color: "var(--text-primary)" }}
+              >
                 Poppins
               </h2>
-              <p className="mt-2 font-display text-xl font-normal text-[#373534]/30 sm:text-2xl">
+              <p
+                className="mt-2 font-display text-xl font-normal sm:text-2xl"
+                style={{ color: "var(--text-faint)" }}
+              >
                 Headlines, navigation, buttons &mdash; weight 400
               </p>
             </div>
           </Reveal>
 
-          <Reveal delay={0.2}>
+          {/* DM Sans */}
+          <Reveal delay={0.24}>
             <div className="mt-16">
-              <p className="font-body text-xl leading-relaxed text-[#373534]/70 sm:text-2xl">
+              <p
+                className="font-body text-xl leading-relaxed sm:text-2xl"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 DM Sans
               </p>
-              <p className="mt-2 font-body text-base text-[#373534]/30">
+              <p
+                className="mt-2 font-body text-base"
+                style={{ color: "var(--text-faint)" }}
+              >
                 Body copy, UI text, labels &mdash; clean, legible, warm
               </p>
             </div>
           </Reveal>
 
           {/* Type scale */}
-          <Reveal delay={0.25}>
+          <Reveal delay={0.3}>
             <div className="mt-24 space-y-6">
               {[
-                { size: "7rem", font: "font-accent", weight: "font-light", sample: "Aa" },
-                { size: "4rem", font: "font-display", weight: "font-normal", sample: "Aa" },
-                { size: "1.25rem", font: "font-body", weight: "", sample: "The quick brown fox jumps over the lazy dog" },
-                { size: "0.875rem", font: "font-body", weight: "", sample: "Refined details. Every letter placed with intention." },
+                { size: "7rem", font: "font-accent", weight: "font-normal", sample: "Aa", italic: false },
+                { size: "7rem", font: "font-accent", weight: "font-normal", sample: "Aa", italic: true },
+                { size: "4rem", font: "font-display", weight: "font-normal", sample: "Aa", italic: false },
+                { size: "1.25rem", font: "font-body", weight: "", sample: "The quick brown fox jumps over the lazy dog", italic: false },
+                { size: "0.875rem", font: "font-body", weight: "", sample: "Refined details. Every letter placed with intention.", italic: false },
               ].map((row, i) => (
                 <div
                   key={i}
-                  className="flex items-baseline gap-6 border-b border-[#373534]/5 pb-4 last:border-0"
+                  className="flex items-baseline gap-6 pb-4 last:border-0"
+                  style={{ borderBottom: i < 4 ? `1px solid var(--border-subtle)` : "none" }}
                 >
-                  <span className="font-body text-xs text-[#373534]/25 w-20 shrink-0">
+                  <span
+                    className="font-body text-xs w-20 shrink-0"
+                    style={{ color: "var(--text-faint)" }}
+                  >
                     {row.size}
+                    {row.italic ? " it" : ""}
                   </span>
                   <p
-                    className={`${row.font} ${row.weight} leading-none`}
+                    className={`${row.font} ${row.weight} ${row.italic ? "italic" : ""} leading-none`}
                     style={{
                       fontSize: row.size,
                       color:
-                        i < 2
-                          ? "#373534"
-                          : i === 2
-                          ? "rgba(55,53,52,0.7)"
-                          : "rgba(55,53,52,0.5)",
+                        i < 3
+                          ? "var(--text-primary)"
+                          : i === 3
+                          ? "var(--text-secondary)"
+                          : "var(--text-tertiary)",
                     }}
                   >
                     {row.sample}
@@ -439,11 +551,11 @@ export default function BrandDesignPage() {
       </section>
 
       {/* ============================================================
-          SECTION 3: GLASSMORPHISM CARDS — Light Theme (Linen bg)
+          SECTION 3: GLASSMORPHISM CARDS — Linen bg
           ============================================================ */}
       <section
         className="relative overflow-hidden py-32 sm:py-40"
-        style={{ backgroundColor: "#f7f1e9" }}
+        style={{ backgroundColor: "var(--surface-secondary)" }}
       >
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
           <AmbientOrb
@@ -480,16 +592,25 @@ export default function BrandDesignPage() {
 
         <div className="relative z-10 mx-auto max-w-6xl px-6">
           <Reveal>
-            <p className="font-body text-xs font-medium uppercase tracking-[0.3em] text-[#373534]/30">
+            <p
+              className="font-body text-xs font-medium uppercase tracking-[0.3em]"
+              style={{ color: "var(--text-faint)" }}
+            >
               Surfaces &amp; Depth
             </p>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <h2 className="mt-6 font-accent text-4xl font-light leading-[1.15] text-[#373534] sm:text-5xl md:text-6xl">
+            <h2
+              className="mt-6 font-accent text-4xl font-normal leading-[1.15] sm:text-5xl md:text-6xl"
+              style={{ color: "var(--text-primary)" }}
+            >
               Glass that <em>breathes</em>
             </h2>
-            <p className="mt-4 max-w-lg font-body text-base leading-relaxed text-[#373534]/50">
+            <p
+              className="mt-4 max-w-lg font-body text-base leading-relaxed"
+              style={{ color: "var(--text-tertiary)" }}
+            >
               Translucent surfaces float over warm ambient light, creating depth
               without weight. Like sitting behind glass doors, watching the sunset.
             </p>
@@ -528,13 +649,22 @@ export default function BrandDesignPage() {
             ].map((card, i) => (
               <Reveal key={card.title} delay={0.15 + i * 0.1}>
                 <GlassCard className="p-8">
-                  <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-[#F25431]/10">
+                  <div
+                    className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl"
+                    style={{ backgroundColor: "var(--accent-subtle)" }}
+                  >
                     {card.icon}
                   </div>
-                  <h3 className="font-display text-lg font-normal tracking-[-0.01em] text-[#373534]">
+                  <h3
+                    className="font-display text-lg font-normal tracking-[-0.01em]"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     {card.title}
                   </h3>
-                  <p className="mt-2 font-body text-sm leading-relaxed text-[#373534]/50">
+                  <p
+                    className="mt-2 font-body text-sm leading-relaxed"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
                     {card.body}
                   </p>
                 </GlassCard>
@@ -545,11 +675,11 @@ export default function BrandDesignPage() {
       </section>
 
       {/* ============================================================
-          SECTION 4: COLOR SYSTEM — Light Theme
+          SECTION 4: COLOR SYSTEM
           ============================================================ */}
       <section
         className="relative overflow-hidden py-32 sm:py-40"
-        style={{ backgroundColor: "#fcf9f5" }}
+        style={{ backgroundColor: "var(--surface-primary)" }}
       >
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
           <AmbientOrb
@@ -563,16 +693,22 @@ export default function BrandDesignPage() {
 
         <div className="relative z-10 mx-auto max-w-6xl px-6">
           <Reveal>
-            <p className="font-body text-xs font-medium uppercase tracking-[0.3em] text-[#373534]/30">
+            <p
+              className="font-body text-xs font-medium uppercase tracking-[0.3em]"
+              style={{ color: "var(--text-faint)" }}
+            >
               Color System
             </p>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <h2 className="mt-6 max-w-xl font-accent text-4xl font-light leading-[1.15] text-[#373534] sm:text-5xl">
+            <h2
+              className="mt-6 max-w-xl font-accent text-4xl font-normal leading-[1.15] sm:text-5xl"
+              style={{ color: "var(--text-primary)" }}
+            >
               Warm where Apple is cool.
               <br />
-              <span className="text-[#373534]/30">Same discipline.</span>
+              <span style={{ color: "var(--text-faint)" }}>Same discipline.</span>
             </h2>
           </Reveal>
 
@@ -584,7 +720,7 @@ export default function BrandDesignPage() {
               { hex: "#efefed", name: "Mist", usage: "Flat surfaces, cards, subtle separation" },
             ].map((s, i) => (
               <Reveal key={s.name} delay={0.15 + i * 0.05}>
-                <Swatch {...s} />
+                <Swatch {...s} dark={isDark} />
               </Reveal>
             ))}
           </div>
@@ -592,7 +728,10 @@ export default function BrandDesignPage() {
           {/* Tints and shades */}
           <Reveal delay={0.35}>
             <div className="mt-20">
-              <p className="font-body text-xs font-medium uppercase tracking-[0.3em] text-[#373534]/25 mb-6">
+              <p
+                className="font-body text-xs font-medium uppercase tracking-[0.3em] mb-6"
+                style={{ color: "var(--text-faint)" }}
+              >
                 Tints &amp; Shades
               </p>
               {[
@@ -621,10 +760,9 @@ export default function BrandDesignPage() {
           Gradient from light to dark. Full-screen statement.
           ============================================================ */}
       <section
-        ref={transitionRef}
         className="relative flex min-h-[80vh] items-center justify-center overflow-hidden"
         style={{
-          background: `linear-gradient(to bottom, #fcf9f5 0%, #f7f1e9 15%, #c7c5c4 35%, #676563 55%, #373534 75%, #2a2928 100%)`,
+          background: `linear-gradient(to bottom, var(--surface-primary) 0%, var(--surface-secondary) 15%, #c7c5c4 35%, #676563 55%, #373534 75%, #2a2928 100%)`,
         }}
       >
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
@@ -644,7 +782,7 @@ export default function BrandDesignPage() {
             </p>
           </Reveal>
           <Reveal delay={0.2}>
-            <h2 className="mt-8 font-accent text-5xl font-light leading-[1.1] text-white/90 sm:text-6xl md:text-7xl lg:text-8xl">
+            <h2 className="mt-8 font-accent text-5xl font-normal leading-[1.1] text-white/90 sm:text-6xl md:text-7xl lg:text-8xl">
               The warmth
               <br />
               <em className="text-[#F25431]/80">stays</em>
@@ -660,7 +798,7 @@ export default function BrandDesignPage() {
       </section>
 
       {/* ============================================================
-          SECTION 6: DARK THEME — Product Cards
+          SECTION 6: DARK THEME SHOWCASE — Product Cards
           ============================================================ */}
       <section
         className="relative overflow-hidden py-32 sm:py-40"
@@ -701,7 +839,7 @@ export default function BrandDesignPage() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <h2 className="mt-6 font-accent text-4xl font-light leading-[1.15] text-white/90 sm:text-5xl md:text-6xl">
+            <h2 className="mt-6 font-accent text-4xl font-normal leading-[1.15] text-white/90 sm:text-5xl md:text-6xl">
               Designed for the
               <br />
               <span className="text-white/30">hours after sunset</span>
@@ -717,7 +855,7 @@ export default function BrandDesignPage() {
               <Reveal key={product.name} delay={0.15 + i * 0.1}>
                 <GlassCard dark className="group p-8 transition-all duration-300 hover:-translate-y-1">
                   <div className="mb-6 aspect-[4/3] rounded-xl bg-white/[0.03] border border-white/[0.05] flex items-center justify-center overflow-hidden">
-                    <span className="font-accent text-3xl font-light italic text-white/10 transition-all duration-500 group-hover:text-white/15 group-hover:scale-105">
+                    <span className="font-accent text-3xl font-normal italic text-white/10 transition-all duration-500 group-hover:text-white/15 group-hover:scale-105">
                       {product.name}
                     </span>
                   </div>
@@ -765,7 +903,7 @@ export default function BrandDesignPage() {
                 </p>
               </Reveal>
               <Reveal delay={0.1}>
-                <h2 className="mt-6 font-accent text-4xl font-light leading-[1.15] text-white/90 sm:text-5xl">
+                <h2 className="mt-6 font-accent text-4xl font-normal leading-[1.15] text-white/90 sm:text-5xl">
                   Patented warmth.
                   <br />
                   <span className="text-white/30">Invisible technology.</span>
@@ -852,8 +990,8 @@ export default function BrandDesignPage() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <h2 className="mt-6 font-accent text-4xl font-light leading-[1.15] text-white/90 sm:text-5xl">
-              Intentional motion
+            <h2 className="mt-6 font-accent text-4xl font-normal leading-[1.15] text-white/90 sm:text-5xl">
+              <em>Intentional</em> motion
             </h2>
             <p className="mt-4 max-w-lg font-body text-base leading-relaxed text-white/35">
               Every interaction has purpose. Hover lifts. Press compresses.
@@ -931,11 +1069,150 @@ export default function BrandDesignPage() {
       </section>
 
       {/* ============================================================
-          SECTION 9: SHAPE LANGUAGE — Dark Theme
+          SECTION 9: DARK THEME TOKEN REFERENCE
+          Shows the full dark palette as a design reference
           ============================================================ */}
       <section
         className="relative overflow-hidden py-32 sm:py-40"
         style={{ backgroundColor: "#1a1918" }}
+      >
+        <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+          <AmbientOrb
+            color="rgba(242,84,49,0.05)"
+            size={500}
+            top="50%"
+            left="30%"
+            blur={200}
+          />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-6xl px-6">
+          <Reveal>
+            <p className="font-body text-xs font-medium uppercase tracking-[0.3em] text-white/25">
+              Dark Theme
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <h2 className="mt-6 font-accent text-4xl font-normal leading-[1.15] text-white/90 sm:text-5xl">
+              The <em>evening</em> palette
+            </h2>
+            <p className="mt-4 max-w-lg font-body text-base leading-relaxed text-white/35">
+              Dark mode follows the same warmth principle. Jet replaces linen.
+              Embers glow brighter. Surfaces breathe with subtle transparency.
+            </p>
+          </Reveal>
+
+          {/* Dark surface tokens */}
+          <Reveal delay={0.2}>
+            <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { bg: "#1a1918", label: "Surface Primary", token: "--surface-primary", desc: "Base background. Deepest layer." },
+                { bg: "#2a2928", label: "Surface Secondary", token: "--surface-secondary", desc: "Cards, panels, elevated sections." },
+                { bg: "#373534", label: "Surface Tertiary", token: "--surface-tertiary", desc: "Inputs, dividers, hover states." },
+              ].map((surface, i) => (
+                <div key={surface.token} className="group">
+                  <div
+                    className="aspect-[3/2] rounded-xl border border-white/[0.06] flex items-end p-4 transition-transform duration-300 group-hover:-translate-y-0.5"
+                    style={{ backgroundColor: surface.bg }}
+                  >
+                    <div>
+                      <p className="font-display text-sm text-white/70">
+                        {surface.label}
+                      </p>
+                      <p className="font-body text-[11px] text-white/25 mt-0.5">
+                        {surface.bg}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="mt-3 font-body text-xs text-white/30">
+                    {surface.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          {/* Dark text hierarchy */}
+          <Reveal delay={0.3}>
+            <div className="mt-20">
+              <p className="font-body text-xs font-medium uppercase tracking-[0.3em] text-white/25 mb-8">
+                Text Hierarchy
+              </p>
+              <div className="space-y-6">
+                {[
+                  { opacity: 0.92, label: "Primary", token: "--text-primary", sample: "Sit outside in January." },
+                  { opacity: 0.7, label: "Secondary", token: "--text-secondary", sample: "Battery-powered heating integrated into the cushion core." },
+                  { opacity: 0.5, label: "Tertiary", token: "--text-tertiary", sample: "Five adjustable temperature levels from 85\u2013120\u00B0F." },
+                  { opacity: 0.35, label: "Muted", token: "--text-muted", sample: "FSC-certified teak \u00B7 Sunbrella fabrics" },
+                  { opacity: 0.2, label: "Faint", token: "--text-faint", sample: "SECTION LABEL" },
+                ].map((level) => (
+                  <div
+                    key={level.label}
+                    className="flex items-baseline gap-6 border-b border-white/[0.04] pb-4 last:border-0"
+                  >
+                    <span className="font-body text-xs text-white/25 w-24 shrink-0">
+                      {level.label}
+                    </span>
+                    <p
+                      className="font-body text-base leading-relaxed"
+                      style={{ color: `rgba(255, 255, 255, ${level.opacity})` }}
+                    >
+                      {level.sample}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Glass on dark */}
+          <Reveal delay={0.35}>
+            <div className="mt-20">
+              <p className="font-body text-xs font-medium uppercase tracking-[0.3em] text-white/25 mb-8">
+                Glass on Dark
+              </p>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <GlassCard dark className="p-8">
+                  <p className="font-accent text-2xl font-normal italic text-white/80 leading-relaxed">
+                    &ldquo;The best outdoor furniture
+                    <br />
+                    is the kind you forget
+                    <br />
+                    is outdoor furniture.&rdquo;
+                  </p>
+                  <p className="mt-4 font-body text-xs text-white/25">
+                    — Sabon Italic, pull quote styling
+                  </p>
+                </GlassCard>
+                <GlassCard dark className="p-8 flex flex-col justify-between">
+                  <div>
+                    <p className="font-display text-sm font-normal text-white/60">
+                      Accent on dark
+                    </p>
+                    <p className="mt-2 font-body text-xs text-white/30 leading-relaxed">
+                      White at 4% background. White at 8% border. Blur 24px.
+                      The same glass system, inverted for depth.
+                    </p>
+                  </div>
+                  <div className="mt-6 flex gap-2">
+                    <div className="h-8 flex-1 rounded-lg bg-white/[0.04] border border-white/[0.06]" />
+                    <div className="h-8 flex-1 rounded-lg bg-white/[0.08] border border-white/[0.10]" />
+                    <div className="h-8 flex-1 rounded-lg bg-white/[0.12] border border-white/[0.14]" />
+                  </div>
+                </GlassCard>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ============================================================
+          SECTION 10: SHAPE LANGUAGE — Dark Theme
+          ============================================================ */}
+      <section
+        className="relative overflow-hidden py-32 sm:py-40"
+        style={{ backgroundColor: "#2a2928" }}
       >
         <div className="relative z-10 mx-auto max-w-6xl px-6">
           <Reveal>
@@ -945,7 +1222,7 @@ export default function BrandDesignPage() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <h2 className="mt-6 font-accent text-4xl font-light leading-[1.15] text-white/90 sm:text-5xl">
+            <h2 className="mt-6 font-accent text-4xl font-normal leading-[1.15] text-white/90 sm:text-5xl">
               Soft geometry,
               <br />
               <span className="text-white/30">warm edges</span>
@@ -983,7 +1260,7 @@ export default function BrandDesignPage() {
       </section>
 
       {/* ============================================================
-          SECTION 10: CLOSING — Dark with Warm Ember Glow
+          SECTION 11: CLOSING — Dark with Warm Ember Glow
           ============================================================ */}
       <section
         className="relative flex min-h-[70vh] items-center justify-center overflow-hidden"
@@ -1015,7 +1292,7 @@ export default function BrandDesignPage() {
           </Reveal>
 
           <Reveal delay={0.2}>
-            <h2 className="mt-8 font-accent text-5xl font-light leading-[1.05] text-white/90 sm:text-6xl md:text-7xl lg:text-[6rem]">
+            <h2 className="mt-8 font-accent text-5xl font-normal leading-[1.05] text-white/90 sm:text-6xl md:text-7xl lg:text-[6rem]">
               Sit outside
               <br />
               in January.
@@ -1033,7 +1310,7 @@ export default function BrandDesignPage() {
           </Reveal>
 
           <Reveal delay={0.5}>
-            <p className="mt-16 font-body text-xs text-white/15 tracking-wide">
+            <p className="mt-16 font-accent text-sm italic text-white/15 tracking-wide">
               Warmth, Without Walls.
             </p>
           </Reveal>
