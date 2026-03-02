@@ -54,7 +54,84 @@
 
   --font-display: var(--font-poppins), system-ui, -apple-system, "Helvetica Neue", sans-serif;
   --font-body: var(--font-dm-sans), system-ui, -apple-system, "Helvetica Neue", sans-serif;
-  --font-accent: var(--font-noto-serif), "Noto Serif", Georgia, serif;
+  --font-accent: var(--font-sabon), "Sabon", Georgia, "Times New Roman", serif;
+}
+
+/* ============================================
+   SEMANTIC COLOR TOKENS — Light / Dark
+   ============================================ */
+:root {
+  color-scheme: light;
+
+  /* Surfaces */
+  --surface-primary: #fcf9f5;
+  --surface-secondary: #f7f1e9;
+  --surface-tertiary: #efefed;
+  --surface-elevated: rgba(255, 255, 255, 0.4);
+  --surface-elevated-border: rgba(255, 255, 255, 0.6);
+  --surface-elevated-shadow: rgba(55, 53, 52, 0.06);
+
+  /* Text */
+  --text-primary: #373534;
+  --text-secondary: rgba(55, 53, 52, 0.7);
+  --text-tertiary: rgba(55, 53, 52, 0.5);
+  --text-muted: rgba(55, 53, 52, 0.4);
+  --text-faint: rgba(55, 53, 52, 0.25);
+
+  /* Accent */
+  --accent: #F25431;
+  --accent-glow: rgba(242, 84, 49, 0.25);
+  --accent-subtle: rgba(242, 84, 49, 0.1);
+
+  /* Borders */
+  --border-default: rgba(55, 53, 52, 0.1);
+  --border-subtle: rgba(55, 53, 52, 0.05);
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: rgba(55, 53, 52, 0.06);
+  --glass-glow: rgba(255, 255, 255, 0.8);
+
+  /* Selection */
+  --selection-bg: rgba(242, 84, 49, 0.15);
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --surface-primary: #1a1918;
+  --surface-secondary: #2a2928;
+  --surface-tertiary: #373534;
+  --surface-elevated: rgba(255, 255, 255, 0.04);
+  --surface-elevated-border: rgba(255, 255, 255, 0.08);
+  --surface-elevated-shadow: rgba(0, 0, 0, 0.4);
+
+  /* Text */
+  --text-primary: rgba(255, 255, 255, 0.92);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --text-muted: rgba(255, 255, 255, 0.35);
+  --text-faint: rgba(255, 255, 255, 0.2);
+
+  /* Accent */
+  --accent: #F25431;
+  --accent-glow: rgba(242, 84, 49, 0.3);
+  --accent-subtle: rgba(242, 84, 49, 0.12);
+
+  /* Borders */
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: rgba(0, 0, 0, 0.4);
+  --glass-glow: rgba(255, 255, 255, 0.1);
+
+  /* Selection */
+  --selection-bg: rgba(242, 84, 49, 0.25);
 }
 
 @layer base {
@@ -62,6 +139,9 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: var(--surface-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
@@ -76,7 +156,7 @@
 }
 
 ::selection {
-  background: rgba(242, 84, 49, 0.15);
+  background: var(--selection-bg);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -97,9 +177,9 @@
    ============================================ */
 
 .surface-glass {
-  background: rgba(255, 255, 255, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 8px 40px rgba(55, 53, 52, 0.06);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 40px var(--glass-shadow);
   backdrop-filter: blur(24px) saturate(1.5);
   -webkit-backdrop-filter: blur(24px) saturate(1.5);
 }
@@ -122,7 +202,7 @@
   inset-inline: 0;
   top: 0;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8), transparent);
+  background: linear-gradient(to right, transparent, var(--glass-glow), transparent);
   pointer-events: none;
 }
 
@@ -165,4 +245,42 @@
 @keyframes ring-pulse {
   0%, 100% { transform: scale(1); opacity: 0.3; }
   50% { transform: scale(1.03); opacity: 0.6; }
+}
+
+/* ============================================
+   DARK THEME TOGGLE BUTTON
+   ============================================ */
+
+.theme-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border-default);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+}
+
+.theme-toggle:active {
+  transform: scale(0.98);
+}
+
+.theme-toggle svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  transition: opacity 0.2s ease;
 }
